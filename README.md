@@ -17,7 +17,7 @@ For example, in Computer Vision, searching for close data points in high dimensi
 In Information Retrieval, large pre-trained multilingual natural language understanding models like BERT, allows representing text sentences in 
 [dense embedding space](https://github.com/UKPLab/sentence-transformers), where nearest neighbor search could serve as an effective multilingual semantic retrieval function.
 
-In many of these real word applications of (approximate) nearest neighbor search, the search is constrained by real time query filters applied over the data point’s metadata. 
+In many of these real word applications of (approximate) nearest neighbor search, the search is constrained by real time query filters applied over the data point's metadata. 
 For example, in E-Commerce search applications with constantly evolving metadata, a search for nearest products for a query in vector space would typically be constrained by 
 product metadata like inventory status and price. 
 There are many open source libraries and algorithms which provide fast approximate (A)NNS, [FAISS](https://github.com/facebookresearch/faiss) and [Annoy](https://github.com/spotify/annoy)
@@ -239,13 +239,13 @@ the benchmark using the gist-960-euclidean dataset with 960 dimensions.
 * python3 to convert the data into Vespa and Elastic feed and query json format (Also h5py and requests library, obtain with pip3 install h5py requests)
 * Ensure you have enough memory available. The Vespa container needs about 5GB and the Elastic container is configured with 8GB heap so 10GB should be about sufficient. 
 
-## Instructions to reproduce benchmark on sift 1M vector data set
+## Instructions to reproduce benchmark on MNIST 784 vector data set
 Clone, build containers and run.  
 <pre>
 $ git clone https://github.com/jobergum/dense-vector-ranking-performance.git; cd dense-vector-ranking-performance
 $ ./bin/build.sh 
 $ ./bin/run.sh
-$ wget http://ann-benchmarks.com/gist-960-euclidean.hdf5
+$ wget http://ann-benchmarks.com/mnist-784-euclidean.hdf5
 </pre>
 
 Verify that the two docker containers are running:
@@ -279,7 +279,7 @@ $ docker exec es bash -c '/usr/share/elasticsearch/create-index.sh'
 Both Vespa and Elastic has batch oriented feed api's with higher throughput performance but
 to keep the dependency list short we opt to use the simplistic HTTP based apis. Feeding 
 <pre>
-$ python3 ./bin/make-feed.py gist-960-euclidean.hdf5 
+$ python3 ./bin/make-feed.py mnist-784-euclidean.hdf5 
 </pre>
 Make both engines, merge the segments within the shard for Elastic and flush and merge the memory index for Vespa.
 <pre>
@@ -290,12 +290,29 @@ $ docker exec vespa bash -c '/opt/vespa/bin/vespa-proton-cmd --local triggerFlus
 
 ### Run benchmark 
 <pre>
-$ python3 ./bin/make-queries.py gist-960-euclidean.hdf5 
+$ python3 ./bin/make-queries.py mnist-784-euclidean.hdf5 
 $ ./bin/do-benchmark.sh 
 </pre>
 
 ### Check recall 
 <pre>
-$ python3 ./bin/check-recall.py gist-960-euclidean.hdf5 
+$ python3 ./bin/check-recall.py mnist-784-euclidean.hdf5 
 </pre> 
+
+## 更新履歴
+
+### 2025-03-27
+- データセットを`mnist-784-euclidean`に変更
+- 設定ファイルの更新
+  - Elasticsearchのスキーマ設定を784次元に更新
+  - Vespaのスキーマ設定を784次元に更新
+- 検索エンジンのバージョン更新
+  - Elasticsearch: 7.6.0 → 8.17.1
+  - OpenSearch: 1.6.0 → 1.3.20
+  - Vespa: 7.190.14 → 8.471.25
+- 設定の改善
+  - クエリ構造の最適化
+  - Dockerコンテナのメモリ設定の調整
+  - ベンチマークスクリプトの修正
+  - 並列処理の改善（スレッド数: 1 → 4）
 
