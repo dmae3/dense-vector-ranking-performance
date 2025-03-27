@@ -6,6 +6,7 @@
     <document-api />
     <search />
     <nodes>
+      <jvm allocated-memory="50%" />
       <node hostalias="node1" />
     </nodes>
   </container>
@@ -35,4 +36,3 @@
   </content>
 
 </services>
-

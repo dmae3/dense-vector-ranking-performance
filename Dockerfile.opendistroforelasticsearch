@@ -1,10 +1,10 @@
-FROM amazon/opendistro-for-elasticsearch:1.6.0
+FROM opensearchproject/opensearch:1.3.20
 
-WORKDIR /usr/share/elasticsearch/
+WORKDIR /usr/share/opensearch/
 
-COPY config/opendistroforelasticsearch /usr/share/elasticsearch/config
-COPY bin/opendistroforelasticsearch/create-index.sh /usr/share/elasticsearch/create-index.sh
+COPY config/opendistroforelasticsearch /usr/share/opensearch/config
+COPY bin/opendistroforelasticsearch/create-index.sh /usr/share/opensearch/create-index.sh
 
 ENV http.port=19200
-ENV opendistro_security.disabled=true
+ENV plugins.security.disabled=true
 ENV knn.algo_param.index_thread_qty=1

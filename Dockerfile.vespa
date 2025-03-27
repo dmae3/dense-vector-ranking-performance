@@ -1,4 +1,4 @@
-FROM vespaengine/vespa:7.190.14
+FROM vespaengine/vespa:8.471.25
 
-WORKDIR /opt/vespa/share/ 
+WORKDIR /opt/vespa/share/
 COPY config/vespa /opt/vespa/share/config

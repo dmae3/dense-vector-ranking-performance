@@ -14,7 +14,9 @@
       },
       "vector": {
         "type": "dense_vector",
-        "dims":960 
+        "dims": 784,
+        "index": true,
+        "similarity": "l2_norm"
       }
     }
   }

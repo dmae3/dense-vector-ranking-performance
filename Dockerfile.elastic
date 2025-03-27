@@ -1,6 +1,9 @@
-FROM elasticsearch:7.6.0
+FROM elasticsearch:8.17.1
 
 WORKDIR /usr/share/elasticsearch/
 
 COPY config/elastic /usr/share/elasticsearch/config
 COPY bin/elastic/create-index.sh /usr/share/elasticsearch/create-index.sh
+
+ENV xpack.security.enabled=false
+ENV discovery.type=single-node

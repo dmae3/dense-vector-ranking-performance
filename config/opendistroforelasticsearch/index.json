@@ -15,7 +15,7 @@
       },
       "vector": {
         "type": "knn_vector",
-        "dimension":960 
+        "dimension":784
       }
     }
   }

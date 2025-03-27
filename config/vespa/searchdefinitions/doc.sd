@@ -1,19 +1,23 @@
 search doc {
   document doc {
     field id type int {
-      indexing: summary |attribute
+      indexing: summary | attribute
     }
 
-    field vector type tensor<float>(x[960]) {
-      indexing: attribute
+    field vector type tensor<float>(x[784]) {
+      indexing: attribute | index
+      attribute {
+          distance-metric: euclidean
+      }
     }
   }
-  document-summary id {
-    summary id type int { source: id}
-  }
-  rank-profile euclidean-rank inherits default {
+  rank-profile closeness {
+    match-features: distance(field, vector)
+    inputs {
+        query(q) tensor<float>(x[784])
+    }
     first-phase {
-      expression: 1/(1 + sqrt(sum(join(query(vector), attribute(vector), f(x,y)((x-y)*(x-y))))))
+        expression: closeness(field, vector)
     }
   }
 }
